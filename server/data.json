@@ -1,0 +1,77 @@
+{
+  "users": [
+    {
+      "username": "panpan",
+      "email": "1729104546@qq.com",
+      "password": "$2a$10$WfRySh//aQ9ui4FUuo78lu1q7oQ07lW6RjqSei0d12da7e9kB18j2",
+      "avatar": "",
+      "id": 1,
+      "created_at": "2026-05-02T14:30:34.949Z"
+    },
+    {
+      "username": "test",
+      "email": "test@test.com",
+      "password": "$2a$10$kuBIk3H0vBaXGsL./OzObuROgMyhyr9eOYF0dSeDdQC/kYaTnuaRK",
+      "avatar": "",
+      "id": 2,
+      "created_at": "2026-05-02T14:31:28.298Z"
+    },
+    {
+      "username": "test2",
+      "email": "test2@test.com",
+      "password": "$2a$10$UklgLDa6h.IgTeEmefoqHus0/kBLsYeWDXQL8XXlsfBvRREbTQVB.",
+      "avatar": "",
+      "id": 3,
+      "created_at": "2026-05-02T14:31:47.751Z"
+    }
+  ],
+  "notebooks": [
+    {
+      "owner_id": 1,
+      "title": "panpan在苏州",
+      "description": "小潘在苏生活记录",
+      "cover_image": "",
+      "latitude": null,
+      "longitude": null,
+      "location_name": "",
+      "is_public": 0,
+      "id": 1,
+      "created_at": "2026-05-02T14:33:34.085Z",
+      "updated_at": "2026-05-02T14:33:34.085Z"
+    },
+    {
+      "owner_id": 1,
+      "title": "在京流浪",
+      "description": "记录小潘从2021-2027年的北漂生活",
+      "cover_image": "",
+      "latitude": 39.9057136,
+      "longitude": 116.3912972,
+      "location_name": "北京市, 中国",
+      "is_public": 0,
+      "id": 2,
+      "created_at": "2026-05-02T14:38:15.358Z",
+      "updated_at": "2026-05-02T14:38:15.358Z"
+    },
+    {
+      "owner_id": 1,
+      "title": "武汉",
+      "description": "2026 农历初三 武汉自驾",
+      "cover_image": "",
+      "latitude": 30.578891,
+      "longitude": 114.2921197,
+      "location_name": "武汉市, 湖北省, 中国",
+      "is_public": 0,
+      "id": 3,
+      "created_at": "2026-05-02T14:39:58.002Z",
+      "updated_at": "2026-05-02T14:39:58.002Z"
+    }
+  ],
+  "notebook_collaborators": [],
+  "entries": [],
+  "nextIds": {
+    "users": 4,
+    "notebooks": 4,
+    "notebook_collaborators": 1,
+    "entries": 1
+  }
+}

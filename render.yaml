@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: travel-journal
+    env: node
+    buildCommand: npm install && cd client && npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+    region: oregon
+    plan: free
+
+  - type: web
+    name: travel-journal-static
+    env: static
+    buildCommand: cd client && npm install && npm run build
+    buildPack: static
+    publishDir: client/dist
+    envVars:
+      - key: API_URL
+        value: https://travel-journal.onrender.com
+    region: oregon
+    plan: free
