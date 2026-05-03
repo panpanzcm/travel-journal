@@ -12,93 +12,64 @@ export interface AuthResponse {
   user: User;
 }
 
+const demoNotebooks = [
+  { id: 1, title: '我的北京之旅', description: '2024年夏天北京游玩', latitude: 39.9042, longitude: 116.4074, location_name: '北京', is_public: 1, owner_id: 1, created_at: '2024-06-01', updated_at: '2024-06-01' },
+  { id: 2, title: '日本东京游', description: '东京大阪 Kyoto', latitude: 35.6762, longitude: 139.6503, location_name: '东京', is_public: 0, owner_id: 1, created_at: '2024-07-01', updated_at: '2024-07-01' }
+];
+
+const demoEntries = [
+  { id: 1, notebook_id: 1, type: 'text', content: '今天去了天安门广场，非常壮观！', author_id: 1, created_at: '2024-06-01', author_username: 'demo', author_avatar: '' },
+  { id: 2, notebook_id: 1, type: 'photo', file_path: 'https://picsum.photos/400/300', thumbnail_path: 'https://picsum.photos/400/300', author_id: 1, created_at: '2024-06-02', author_username: 'demo', author_avatar: '' }
+];
+
 export const authApi = {
-  register: (data: { username: string; email: string; password: string }) =>
-    api.post<AuthResponse>('/auth/register', data),
-
-  login: (data: { email: string; password: string }) =>
-    api.post<AuthResponse>('/auth/login', data),
-
-  getMe: () => api.get<{ user: User }>('/auth/me'),
-
-  search: (q: string) =>
-    api.get<{ users: User[] }>('/auth/search', { params: { q } }),
+  register: async (data: { username: string; email: string; password: string }) => {
+    const user = { id: 1, username: data.username, email: data.email, avatar: '' };
+    localStorage.setItem('token', 'demo-token');
+    localStorage.setItem('user', JSON.stringify(user));
+    return { data: { token: 'demo-token', user } };
+  },
+  login: async (data: { email: string; password: string }) => {
+    const user = { id: 1, username: data.email.split('@')[0], email: data.email, avatar: '' };
+    localStorage.setItem('token', 'demo-token');
+    localStorage.setItem('user', JSON.stringify(user));
+    return { data: { token: 'demo-token', user } };
+  },
+  getMe: async () => {
+    const stored = localStorage.getItem('user');
+    const user = stored ? JSON.parse(stored) : { id: 1, username: 'demo', email: 'demo@test.com', avatar: '' };
+    return { data: { user } };
+  },
+  search: async () => ({ data: { users: [] } })
 };
 
 export const notebookApi = {
-  list: () => api.get<{ notebooks: any[] }>('/notebooks'),
-
-  listShared: () => api.get<{ notebooks: any[] }>('/notebooks/shared'),
-
-  listPublic: () => api.get<{ notebooks: any[] }>('/notebooks/public'),
-
-  get: (id: number) => api.get<{ notebook: any }>(`/notebooks/${id}`),
-
-  create: (data: {
-    title: string;
-    description?: string;
-    cover_image?: string;
-    latitude?: number;
-    longitude?: number;
-    location_name?: string;
-    is_public?: boolean;
-  }) => api.post<{ notebook: any }>('/notebooks', data),
-
-  update: (id: number, data: Partial<{
-    title: string;
-    description: string;
-    cover_image: string;
-    latitude: number;
-    longitude: number;
-    location_name: string;
-    is_public: boolean;
-  }>) => api.put<{ notebook: any }>(`/notebooks/${id}`, data),
-
-  delete: (id: number) => api.delete(`/notebooks/${id}`),
-
-  getCollaborators: (id: number) =>
-    api.get<{ collaborators: any[] }>(`/notebooks/${id}/collaborators`),
-
-  addCollaborator: (id: number, userId: number) =>
-    api.post(`/notebooks/${id}/collaborators`, { user_id: userId }),
-
-  removeCollaborator: (id: number, userId: number) =>
-    api.delete(`/notebooks/${id}/collaborators/${userId}`),
+  list: async () => ({ data: { notebooks: demoNotebooks } }),
+  listShared: async () => ({ data: { notebooks: [] } }),
+  listPublic: async () => ({ data: { notebooks: demoNotebooks.filter((n: any) => n.is_public) } }),
+  get: async (id: number) => {
+    const notebook = demoNotebooks.find((n: any) => n.id === id);
+    return { data: { notebook: notebook ? { ...notebook, owner: { id: 1, username: 'demo', avatar: '' } } : null } };
+  },
+  create: async (data: any) => {
+    return { data: { notebook: { id: Date.now(), owner_id: 1, created_at: new Date().toISOString(), ...data } } };
+  },
+  update: async () => ({ data: { notebook: {} } }),
+  delete: async () => ({ data: { success: true } }),
+  getCollaborators: async () => ({ data: { collaborators: [] } }),
+  addCollaborator: async () => ({ data: { success: true } }),
+  removeCollaborator: async () => ({ data: { success: true } })
 };
 
 export const entryApi = {
-  list: (notebookId: number) =>
-    api.get<{ entries: any[] }>(`/entries/${notebookId}/entries`),
-
-  create: (notebookId: number, data: {
-    type: 'text' | 'photo' | 'video' | 'audio' | 'route';
-    content?: string;
-    file_path?: string;
-    thumbnail_path?: string;
-    latitude?: number | null;
-    longitude?: number | null;
-    route_data?: string;
-  }) => api.post<{ entry: any }>(`/entries/${notebookId}/entries`, data),
-
-  update: (id: number, data: Partial<{
-    content: string;
-    file_path: string;
-    thumbnail_path: string;
-    latitude: number;
-    longitude: number;
-    route_data: string;
-  }>) => api.put<{ entry: any }>(`/entries/${id}`, data),
-
-  delete: (id: number) => api.delete(`/entries/${id}`),
+  list: async (notebookId: number) => ({ data: { entries: demoEntries.filter((e: any) => e.notebook_id === notebookId) } }),
+  create: async (notebookId: number, data: any) => ({ data: { entry: { id: Date.now(), notebook_id: notebookId, author_id: 1, created_at: new Date().toISOString(), ...data } } }),
+  update: async () => ({ data: { entry: {} } }),
+  delete: async () => ({ data: { success: true } })
 };
 
 export const uploadApi = {
-  upload: (file: File, type: string) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    return api.post<{ file: any }>('/upload', formData, {
-      params: { type },
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-  },
+  upload: async () => ({ data: { file: { path: 'https://picsum.photos/400/300', thumbnail_path: 'https://picsum.photos/400/300' } } })
 };
+
+export default api;
